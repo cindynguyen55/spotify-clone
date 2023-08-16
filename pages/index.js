@@ -1,6 +1,8 @@
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 
+import Sidebar from "@/components/Sidebar"
+
 export default function Home() {
 
   const { data: session } = useSession()
@@ -13,7 +15,7 @@ export default function Home() {
       if (session && session.accessToken) {
         setX(session.accessToken)
 
-        const res = await fetch('https://api.spotify.com/v1/me/playlists',{
+        const res = await fetch('https://api.spotify.com/v1/me/playlists', {
           headers: {
             Authorization: `Bearer ${session.accessToken}`
           }
@@ -27,8 +29,14 @@ export default function Home() {
   }, [session])
 
   return (
-    <main className="">
-
-    </main>
+    <>
+      <main className="flex w-full h-screen overflow-hidden">
+        <Sidebar/>
+        <div>
+          Main
+        </div>
+      </main>
+      <div className="sticky z-20 bottom-0 h-24 w-full bg-slate-600"> Player </div>
+    </>
   )
 }
