@@ -21,7 +21,7 @@ export default function Home() {
           />
           {view === 'playlist' &&
             <PlaylistView
-              globalArtistId={globalArtistId}
+              globalPlaylistId={globalPlaylistId}
             />}
           {view === 'search' && <Search />}
           {view === 'library' && <Library />}

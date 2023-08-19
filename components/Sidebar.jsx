@@ -31,7 +31,7 @@ const Sidebar = ({ view, setView, setGolbalPlaylistId }) => {
     }, [session])
 
     return (
-        <div className='w-64 h-screen grow-0 shrink-0 border-r border-neutral-900 flex flex-col p-5 space-y-4 text-neutral-400 text-sm'>
+        <div className='w-64 h-screen grow-0 shrink-0 border-r border-neutral-900 flex flex-col p-5 space-y-4 text-neutral-400 text-sm hidden md:inline-flex'>
             <div className='mt-1 mb-5 hover:cursor-pointer'>
                 <SpotifySVG />
             </div>
