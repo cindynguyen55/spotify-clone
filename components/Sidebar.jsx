@@ -31,7 +31,7 @@ const Sidebar = ({ view, setView, setGolbalPlaylistId }) => {
     }, [session])
 
     return (
-        <div className='w-64 h-screen grow-0 shrink-0 border-r border-neutral-900 flex flex-col p-5 space-y-4 text-neutral-400 text-sm hidden md:inline-flex'>
+        <div className='w-64 h-screen grow-0 shrink-0 border-r border-neutral-900 p-5 text-neutral-400 text-sm flex flex-col space-y-4 hidden md:inline-flex'>
             <div className='mt-1 mb-5 hover:cursor-pointer'>
                 <SpotifySVG />
             </div>
@@ -74,7 +74,7 @@ const Sidebar = ({ view, setView, setGolbalPlaylistId }) => {
             </div>
             <hr className='border-neutral-900 -mx-5' />
 
-            <div className='-me-5 hover:overflow-y-auto'>
+            <div className='-me-5 overflow-y-auto'>
                 {playlists != null ?
                     playlists.map((playlist) => (
                         <div key={playlist.id}
@@ -82,14 +82,16 @@ const Sidebar = ({ view, setView, setGolbalPlaylistId }) => {
                                 setGolbalPlaylistId(playlist.id)
                                 setView('playlist')
                             }}
-                            className='cursor-pointer hover:text-white w-52 truncate py-5'
+                            className='cursor-pointer hover:text-white w-52 truncate py-10' //Padiing tam
                         >
                             {playlist.name}
                         </div>
                     ))
                     : <div>Không có playlist nào</div>
                 }
+
             </div>
+            <hr className='h-24' />
         </div>
     )
 }
