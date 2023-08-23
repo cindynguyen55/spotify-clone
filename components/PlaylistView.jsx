@@ -19,7 +19,7 @@ const MusicNoteSVG = () => (
     <path fill="currentColor" d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v13.167a3.5 3.5 0 1 1-3.5-3.5H6V3zm0 13.667H4.5a1.5 1.5 0 1 0 1.5 1.5v-1.5zm13 0h-1.5a1.5 1.5 0 1 0 1.5 1.5v-1.5z"></path>
   </svg>)
 
-const PlaylistView = ({ globalPlaylistId, setGlobalCurrentSongId }) => {
+const PlaylistView = ({ globalPlaylistId, setGlobalCurrentSongId, setGlobalIsTrackPlaying }) => {
   const { data: session } = useSession()
   const [playlistData, setPlaylistData] = useState(null)
   const [color, setColor] = useState(colors[0])
@@ -76,7 +76,6 @@ const PlaylistView = ({ globalPlaylistId, setGlobalCurrentSongId }) => {
           <p>
             {playlistData?.name}
           </p>
-
         </div>
       </header>
       <div className='absolute z-20 top-5 right-8 flex items-center bg-black bg-opacity-70 text-white space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2'>
@@ -105,10 +104,11 @@ const PlaylistView = ({ globalPlaylistId, setGlobalCurrentSongId }) => {
             //Song component
             return (
               <Song
-                key={track.track.id}
+                key={index}
                 sno={index}
                 track={track.track}
                 setGlobalCurrentSongId={setGlobalCurrentSongId}
+                setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
               />
             )
           })}

@@ -1,8 +1,28 @@
 import { PlayIcon } from '@heroicons/react/24/solid';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react'
 
-const Song = ({ sno, track, setGlobalCurrentSongId }) => {
+const Song = ({ sno, track, setGlobalCurrentSongId, globalIsTrackPlaying, setGlobalIsTrackPlaying }) => {
+    const { data: session } = useSession()
     const [hover, setHover] = useState(false)
+
+    async function playSong(track) {
+        setGlobalCurrentSongId(track?.id)
+        setGlobalIsTrackPlaying(true)
+
+        if (session && session.accessToken) {
+            const res = await fetch('https://api.spotify.com/v1/me/player/play', {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${session.accessToken}`
+                },
+                body: JSON.stringify({
+                    uris: [track?.uri]
+                })
+            })
+            console.log("on play", res.status)
+        }
+    }
 
     function millisToMinutesAndSeconds(millis) {
         var minutes = Math.floor(millis / 60000);
@@ -18,7 +38,7 @@ const Song = ({ sno, track, setGlobalCurrentSongId }) => {
         <div
             onMouseEnter={() => { setHover(true) }}
             onMouseLeave={() => { setHover(false) }}
-            onClick={() => { setGlobalCurrentSongId(track?.id) }}
+            onClick={async () => { await playSong(track) }}
             className='grid grid-cols-2 text-neutral-400 text-sm py-4 px-5 hover:bg-white hover:bg-opacity-10 rounded-lg'
         >
             <div className='flex items-center space-x-4'>
@@ -32,14 +52,14 @@ const Song = ({ sno, track, setGlobalCurrentSongId }) => {
                         {
                             track?.artists?.map((artist, index) => {
                                 return (
-                                    <>
+                                    <span key={index}>
                                         <span className='hover:underline'>
                                             {artist.name}
                                         </span>
                                         <span>
                                             {index != track.artists.length - 1 ? ',' : null}
                                         </span>
-                                    </>
+                                    </span>
                                 )
                             })
                         }

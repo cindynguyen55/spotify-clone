@@ -11,6 +11,7 @@ export default function Home() {
   const [globalPlaylistId, setGolbalPlaylistId] = useState(null)
   const [globalArtistId, setGolbalArtistId] = useState(null)
   const [globalCurrentSongId, setGlobalCurrentSongId] = useState(null)
+  const [globalIsTrackPlaying, setGlobalIsTrackPlaying] = useState(false)
 
   return (
     <>
@@ -26,6 +27,7 @@ export default function Home() {
               <PlaylistView
                 globalPlaylistId={globalPlaylistId}
                 setGlobalCurrentSongId={setGlobalCurrentSongId}
+                setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
               />}
             {view === 'search' && <Search />}
             {view === 'library' && <Library />}
@@ -34,8 +36,11 @@ export default function Home() {
         </div>
 
         <div className="sticky z-20 bottom-0 w-full">
-          <Player 
+          <Player
             globalCurrentSongId={globalCurrentSongId}
+            setGlobalCurrentSongId={setGlobalCurrentSongId}
+            globalIsTrackPlaying={globalIsTrackPlaying}
+            setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
           />
         </div>
       </main>
