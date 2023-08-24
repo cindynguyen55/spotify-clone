@@ -15,26 +15,43 @@ export default function Home() {
 
   return (
     <>
-      <main className="flex flex-col w-full h-screen overflow-hidden">
-        <div className="h-screen overflow-hidden">
-          <div className="flex w-full">
-            <Sidebar
-              view={view}
+      <main className="h-screen overflow-hidden bg-black">
+        <div className="flex w-full">
+          <Sidebar
+            view={view}
+            setView={setView}
+            setGolbalPlaylistId={setGolbalPlaylistId}
+          />
+          {view === 'playlist' &&
+            <PlaylistView
+              globalPlaylistId={globalPlaylistId}
+              setGlobalCurrentSongId={setGlobalCurrentSongId}
+              setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
+            />
+          }
+          {view === 'search' &&
+            <Search
+              setView={setView}
+              setGolbalPlaylistId={setGolbalPlaylistId}
+              setGlobalCurrentSongId={setGlobalCurrentSongId}
+              setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
+            />
+          }
+          {view === 'library' &&
+            <Library
               setView={setView}
               setGolbalPlaylistId={setGolbalPlaylistId}
             />
-            {view === 'playlist' &&
-              <PlaylistView
-                globalPlaylistId={globalPlaylistId}
-                setGlobalCurrentSongId={setGlobalCurrentSongId}
-                setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
-              />}
-            {view === 'search' && <Search />}
-            {view === 'library' && <Library />}
-            {view === 'artist' && <Artist />}
-          </div>
+          }
+          {view === 'artist' &&
+            <Artist
+              globalArtistId={globalArtistId}
+              setGolbalArtistId={setGolbalArtistId}
+              setGlobalCurrentSongId={setGlobalCurrentSongId}
+              setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
+            />
+          }
         </div>
-
         <div className="sticky z-20 bottom-0 w-full">
           <Player
             globalCurrentSongId={globalCurrentSongId}

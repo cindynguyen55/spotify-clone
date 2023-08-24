@@ -91,7 +91,7 @@ const Sidebar = ({ view, setView, setGolbalPlaylistId }) => {
                 }
 
             </div>
-            <hr className='h-24' />
+            <div className='h-24'></div>
         </div>
     )
 }

@@ -67,7 +67,7 @@ const Player = ({ globalCurrentSongId, setGlobalCurrentSongId, globalIsTrackPlay
         if (!globalCurrentSongId) {
           const data = await getCurrentPlaying()
           setGlobalCurrentSongId(data?.item?.id)
-          if (data.is_playing) {
+          if (data?.is_playing) {
             setGlobalIsTrackPlaying(true)
           }
           await fetchSongInfo(data?.item?.id)
@@ -100,9 +100,6 @@ const Player = ({ globalCurrentSongId, setGlobalCurrentSongId, globalIsTrackPlay
           :
           <PlayCircleIcon onClick={handlePlayPause} className='h-10 w-10' />
         }
-      </div>
-      <div>
-
       </div>
     </div>
   )
