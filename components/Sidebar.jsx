@@ -10,7 +10,7 @@ const SpotifySVG = () => (
     </svg>
 )
 
-const Sidebar = ({ view, setView, setGolbalPlaylistId }) => {
+const Sidebar = ({ view, setView, setGlobalPlaylistId }) => {
     const { data: session } = useSession()
     const [playlists, setPlaylists] = useState([])
 
@@ -79,7 +79,7 @@ const Sidebar = ({ view, setView, setGolbalPlaylistId }) => {
                     playlists.map((playlist) => (
                         <div key={playlist.id}
                             onClick={() => {
-                                setGolbalPlaylistId(playlist.id)
+                                setGlobalPlaylistId(playlist.id)
                                 setView('playlist')
                             }}
                             className='cursor-pointer hover:text-white w-52 truncate py-10' //Padiing tam

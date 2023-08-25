@@ -1,10 +1,10 @@
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import React, { useEffect, useRef, useState } from 'react'
 import FeaturedPlaylists from './FeaturedPlaylists'
 import SearchResults from './SearchResults'
 
-const Search = ({ setView, setGolbalPlaylistId, setGlobalCurrentSongId, setGlobalIsTrackPlaying }) => {
+const Search = ({ setView, setGlobalPlaylistId, setGlobalCurrentSongId, setGlobalIsTrackPlaying, setGlobalArtistId }) => {
     const { data: session } = useSession()
     const [searchData, setSearchData] = useState(null)
     const [inputValue, setInputValue] = useState('')
@@ -43,7 +43,10 @@ const Search = ({ setView, setGolbalPlaylistId, setGlobalCurrentSongId, setGloba
                     className='rounded-full bg-white w-96 pl-12 text-neutral-900 text-base py-2 font-normal outline-0'
                 />
             </header>
-            <div className='absolute z-20 top-5 right-8 flex items-center bg-black bg-opacity-70 text-white space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2'>
+            <div 
+                onClick={()=>{signOut()}}  
+                className='absolute z-20 top-5 right-8 flex items-center bg-black bg-opacity-70 text-white space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2'
+            >
                 <img className='rounded-full w-7 h-7' src={session?.user.image} alt='Profile pic' />
                 <p className='text-sm'>Logout</p>
                 <ChevronDownIcon className='h-5 w-5' />
@@ -52,7 +55,7 @@ const Search = ({ setView, setGolbalPlaylistId, setGlobalCurrentSongId, setGloba
                 {searchData === null ?
                     <FeaturedPlaylists
                         setView={setView}
-                        setGolbalPlaylistId={setGolbalPlaylistId}
+                        setGlobalPlaylistId={setGlobalPlaylistId}
                     />
                     :
                     <SearchResults
@@ -60,9 +63,10 @@ const Search = ({ setView, setGolbalPlaylistId, setGlobalCurrentSongId, setGloba
                         songs={searchData?.tracks?.items}
                         artists={searchData?.artists?.items}
                         setView={setView}
-                        setGolbalPlaylistId={setGolbalPlaylistId}
+                        setGlobalPlaylistId={setGlobalPlaylistId}
                         setGlobalCurrentSongId={setGlobalCurrentSongId}
                         setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
+                        setGlobalArtistId={setGlobalArtistId}
                     />
                 }
             </div>

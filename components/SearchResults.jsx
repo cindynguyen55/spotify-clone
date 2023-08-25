@@ -8,7 +8,7 @@ const MusicNoteSVG = () => (
     </svg>
 )
 
-const SearchResults = ({ playlists, songs, artists, setView, setGolbalPlaylistId, setGlobalCurrentSongId, setGlobalIsTrackPlaying }) => {
+const SearchResults = ({ playlists, songs, artists, setView, setGlobalPlaylistId, setGlobalCurrentSongId, setGlobalIsTrackPlaying, setGlobalArtistId }) => {
     const { data: session } = useSession()
 
     async function playSong(track) {
@@ -31,7 +31,12 @@ const SearchResults = ({ playlists, songs, artists, setView, setGolbalPlaylistId
 
     function selectPlaylist(playlist) {
         setView('playlist')
-        setGolbalPlaylistId(playlist?.id)
+        setGlobalPlaylistId(playlist?.id)
+    }
+
+    function selectArtist(artist) {
+        setView('artist')
+        setGlobalArtistId(artist?.id)
     }
 
     function millisToMinutesAndSeconds(millis) {
@@ -100,10 +105,11 @@ const SearchResults = ({ playlists, songs, artists, setView, setGolbalPlaylistId
                 <h2 className='text-xl font-bold'>
                     Artists
                 </h2>
-                <div className='grid grid-cols-5 gap-6 place-items-center'>
+                <div className=' grid grid-cols-1 gap-6 place-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
                     {artists?.slice(0, 5).map((artist, index) => {
                         return (
                             <div
+                                onClick={() => { selectArtist(artist) }}
                                 key={index}
                                 className='hover:cursor-pointer relative group w-56 mb-2 bg-neutral-800 hover:bg-neutral-600 rounded-md p-4'
                             >

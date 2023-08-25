@@ -34,6 +34,7 @@ async function refreshAccessToken(token) {
     const data = await res.json()
 
     return {
+        ...token,
         accessToken: data.access_token,
         refreshToken: data.refresh_token ?? token.refreshToken,
         accessTokenExpires: Date.now() + data.expires_in * 1000
@@ -64,12 +65,12 @@ export const authOptions = {
             }
 
             //access token has NOT expired
-            if (Date.now() < token.accessTokenExpires * 1000) {
+            if (token.accessTokenExpires && Date.now() < token.accessTokenExpires * 1000) {
                 return token
             }
 
             //access token has expired
-            return refreshAccessToken(token)
+            return await refreshAccessToken(token)
         },
         async session({ session, token, user }) {
             // Send properties to the client, like an access_token from a provider.

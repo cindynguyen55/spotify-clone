@@ -8,8 +8,8 @@ import Player from "@/components/Player"
 
 export default function Home() {
   const [view, setView] = useState('search') //['search', 'library', 'playlist', 'artist']
-  const [globalPlaylistId, setGolbalPlaylistId] = useState(null)
-  const [globalArtistId, setGolbalArtistId] = useState(null)
+  const [globalPlaylistId, setGlobalPlaylistId] = useState(null)
+  const [globalArtistId, setGlobalArtistId] = useState(null)
   const [globalCurrentSongId, setGlobalCurrentSongId] = useState(null)
   const [globalIsTrackPlaying, setGlobalIsTrackPlaying] = useState(false)
 
@@ -20,33 +20,37 @@ export default function Home() {
           <Sidebar
             view={view}
             setView={setView}
-            setGolbalPlaylistId={setGolbalPlaylistId}
+            setGlobalPlaylistId={setGlobalPlaylistId}
           />
           {view === 'playlist' &&
             <PlaylistView
+              setView={setView}
               globalPlaylistId={globalPlaylistId}
               setGlobalCurrentSongId={setGlobalCurrentSongId}
               setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
+              setGlobalArtistId={setGlobalArtistId}
             />
           }
           {view === 'search' &&
             <Search
               setView={setView}
-              setGolbalPlaylistId={setGolbalPlaylistId}
+              setGlobalPlaylistId={setGlobalPlaylistId}
               setGlobalCurrentSongId={setGlobalCurrentSongId}
               setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
+              setGlobalArtistId={setGlobalArtistId}
             />
           }
           {view === 'library' &&
             <Library
               setView={setView}
-              setGolbalPlaylistId={setGolbalPlaylistId}
+              setGlobalPlaylistId={setGlobalPlaylistId}
             />
           }
           {view === 'artist' &&
             <Artist
+              setView={setView}
               globalArtistId={globalArtistId}
-              setGolbalArtistId={setGolbalArtistId}
+              setGlobalArtistId={setGlobalArtistId}
               setGlobalCurrentSongId={setGlobalCurrentSongId}
               setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
             />

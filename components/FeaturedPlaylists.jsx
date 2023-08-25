@@ -8,13 +8,13 @@ const MusicNoteSVG = () => (
     </svg>
 )
 
-const FeaturedPlaylists = ({setView, setGolbalPlaylistId}) => {
+const FeaturedPlaylists = ({setView, setGlobalPlaylistId}) => {
     const { data: session } = useSession()
     const [playlists, setPlaylists] = useState([])
 
     function selectPlaylist(playlist){
         setView('playlist')
-        setGolbalPlaylistId(playlist.id)
+        setGlobalPlaylistId(playlist.id)
     }
 
     useEffect(() => {
@@ -40,7 +40,7 @@ const FeaturedPlaylists = ({setView, setGolbalPlaylistId}) => {
             <h2 className='tetx-xl font-bold'>
                 Featured Playlist
             </h2>
-            <div className='grid grid-cols-5 gap-6 mb-48'>
+            <div className='px-2 grid grid-cols-1 gap-6 mb-48 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
                 {playlists?.map((playlist) => {
                     return (
                         <div

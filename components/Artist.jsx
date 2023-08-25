@@ -1,6 +1,6 @@
-import { ChevronDownIcon } from '@heroicons/react/24/solid'
+import { ChevronDownIcon, PlayIcon } from '@heroicons/react/24/solid'
 import { shuffle } from 'lodash'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import Song from './Song'
 
@@ -16,11 +16,11 @@ const colors = [
 
 const MusicNoteSVG = () => (
     <svg role="img" viewBox="0 0 24 24" data-encore-id="icon" className="text-neutral-500 h-12 w-12">
-      <path fill="currentColor" d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v13.167a3.5 3.5 0 1 1-3.5-3.5H6V3zm0 13.667H4.5a1.5 1.5 0 1 0 1.5 1.5v-1.5zm13 0h-1.5a1.5 1.5 0 1 0 1.5 1.5v-1.5z"></path>
+        <path fill="currentColor" d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v13.167a3.5 3.5 0 1 1-3.5-3.5H6V3zm0 13.667H4.5a1.5 1.5 0 1 0 1.5 1.5v-1.5zm13 0h-1.5a1.5 1.5 0 1 0 1.5 1.5v-1.5z"></path>
     </svg>
 )
 
-export const Artist = ({ globalArtistsId, setGolbalArtistId, setGlobalCurrentSongId, setGlobalIsTrackPlaying }) => {
+export const Artist = ({ setView, globalArtistId, setGlobalArtistId, setGlobalCurrentSongId, setGlobalIsTrackPlaying }) => {
     const { data: session } = useSession()
     const [color, setColor] = useState(colors[0])
     const [opacity, setOpacity] = useState(0)
@@ -49,7 +49,7 @@ export const Artist = ({ globalArtistsId, setGolbalArtistId, setGlobalCurrentSon
     }
 
     async function getArtistData() {
-        const res = await fetch(`https://api.spotify.com/v1/artists/${globalArtistsId}`, {
+        const res = await fetch(`https://api.spotify.com/v1/artists/${globalArtistId}`, {
             headers: {
                 Authorization: `Bearer ${session.accessToken}`
             }
@@ -59,13 +59,23 @@ export const Artist = ({ globalArtistsId, setGolbalArtistId, setGlobalCurrentSon
     }
 
     async function getTopTracks() {
-        const res = await fetch(`https://api.spotify.com/v1/artists/{${globalArtistsId}/top-tracks}`, {
+        const res = await fetch(`https://api.spotify.com/v1/artists/${globalArtistId}/top-tracks?` + new URLSearchParams({ market: "VN" }), {
             headers: {
                 Authorization: `Bearer ${session.accessToken}`
             }
         })
         const data = await res.json()
-        return data
+        return data.tracks
+    }
+
+    async function getRelatedArtist() {
+        const res = await fetch(`https://api.spotify.com/v1/artists/${globalArtistId}/related-artists`, {
+            headers: {
+                Authorization: `Bearer ${session.accessToken}`
+            }
+        })
+        const data = await res.json()
+        return data.artists
     }
 
     useEffect(() => {
@@ -73,15 +83,15 @@ export const Artist = ({ globalArtistsId, setGolbalArtistId, setGlobalCurrentSon
             if (session && session.accessToken) {
                 setArtistData(await getArtistData())
                 setTopTracks(await getTopTracks())
+                setRelatedArtists(await getRelatedArtist())
             }
         }
         f()
-
-    }, [session, globalArtistsId])
+    }, [session, globalArtistId])
 
     useEffect(() => {
         setColor(shuffle(colors).pop())
-    }, [globalArtistsId])
+    }, [globalArtistId])
 
     return (
         <div className='flex-grow h-screen'>
@@ -96,7 +106,10 @@ export const Artist = ({ globalArtistsId, setGolbalArtistId, setGlobalCurrentSon
                     </p>
                 </div>
             </header>
-            <div className='absolute z-20 top-5 right-8 flex items-center bg-black bg-opacity-70 text-white space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2'>
+            <div 
+                onClick={() => { signOut() }}
+                className='absolute z-20 top-5 right-8 flex items-center bg-black bg-opacity-70 text-white space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2'
+            >
                 <img className='rounded-full w-7 h-7' src={session?.user.image} alt='Profile pic' />
                 <p className='text-sm'>Logout</p>
                 <ChevronDownIcon className='h-5 w-5' />
@@ -117,19 +130,49 @@ export const Artist = ({ globalArtistsId, setGolbalArtistId, setGlobalCurrentSon
                         <h1 className='text-2xl md:text-3xl lg:text-5xl font-extrabold'>{artistData?.name}</h1>
                     </div>
                 </section>
-                <div className='text-white px-8 flex flex-col space-y-1 pb-28 overflow-y-auto'>
-                    {topTracks?.map((track, index) => {
-                        //Song component
-                        return (
-                            <Song
-                                key={index}
-                                sno={index}
-                                track={track.track}
-                                setGlobalCurrentSongId={setGlobalCurrentSongId}
-                                setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
-                            />
-                        )
-                    })}
+                <div className='space-y-4'>
+                    <h2 className='text-xl font-bold px-8'>
+                        Popular
+                    </h2>
+                    <div className='text-white px-8 flex flex-col space-y-1 pb-6 overflow-y-auto'>
+                        {topTracks?.slice(0, 5).map((track, index) => {
+                            //Song component
+                            return (
+                                <Song
+                                    key={index}
+                                    sno={index}
+                                    track={track}
+                                    setGlobalCurrentSongId={setGlobalCurrentSongId}
+                                    setGlobalIsTrackPlaying={setGlobalIsTrackPlaying}
+                                    setGlobalArtistId={setGlobalArtistId}
+                                    setView={setView}
+                                />
+                            )
+                        })}
+                    </div>
+                </div>
+                <div className='space-y-4 mb-28'>
+                    <h2 className='text-xl font-bold px-8'>
+                        Related Artists
+                    </h2>
+                    <div className='px-8 grid grid-cols-1 place-items-center gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
+                        {relatedArtists?.slice(0, 5).map((artist, index) => {
+                            return (
+                                <div
+                                    onClick={() => { setGlobalArtistId(artist?.id) }}
+                                    key={index}
+                                    className='hover:cursor-pointer relative group w-56 mb-2 bg-neutral-800 hover:bg-neutral-600 rounded-md p-4'
+                                >
+                                    <div className='absolute opacity-0 group-hover:opacity-100 transition-all ease-in-out duration-200 shadow-2xl shadow-neutral-900 z-10 h-12 w-12 flex items-center justify-center rounded-full bg-green-500 top-[156px] group-hover:top-[148px] right-6'>
+                                        <PlayIcon className='h-6 w-6 text-black' />
+                                    </div>
+                                    <img className='w-48 h-48 mb-4 rounded-full' src={artist?.images[0]?.url} />
+                                    <p className='text-base text-white mb-1 w-48 truncate'>{artist?.name}</p>
+                                    <p className='text-sm text-neutral-400 mb-8 w-48 truncate'>Artist</p>
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
             </div>
         </div>
