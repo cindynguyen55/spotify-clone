@@ -38,13 +38,15 @@ const Search = ({ setView, setGlobalPlaylistId, setGlobalCurrentSongId, setGloba
                     value={inputValue}
                     onChange={async (e) => {
                         setInputValue(e.target.value)
-                        await updateSearchResults(e.target.value)
+                        if (e.target.value) {
+                            await updateSearchResults(e.target.value)
+                        }
                     }}
                     className='rounded-full bg-white w-96 pl-12 text-neutral-900 text-base py-2 font-normal outline-0'
                 />
             </header>
-            <div 
-                onClick={()=>{signOut()}}  
+            <div
+                onClick={() => { signOut() }}
                 className='absolute z-20 top-5 right-8 flex items-center bg-black bg-opacity-70 text-white space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2'
             >
                 <img className='rounded-full w-7 h-7' src={session?.user.image} alt='Profile pic' />
@@ -52,7 +54,7 @@ const Search = ({ setView, setGlobalPlaylistId, setGlobalCurrentSongId, setGloba
                 <ChevronDownIcon className='h-5 w-5' />
             </div>
             <div>
-                {searchData === null ?
+                {searchData === null || inputValue == '' ?
                     <FeaturedPlaylists
                         setView={setView}
                         setGlobalPlaylistId={setGlobalPlaylistId}
