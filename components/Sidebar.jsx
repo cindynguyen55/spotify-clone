@@ -59,7 +59,7 @@ const Sidebar = ({ view, setView, setGlobalPlaylistId }) => {
                     <p>Your Library</p>
                 </button>
             </div>
-            <hr className='border-black' />
+            <hr className='border-black  -mx-5' />
             <div className='hover:text-white'>
                 <button className='flex items-center space-x-2'>
                     <PlusIcon className="h-5 w-5" />
