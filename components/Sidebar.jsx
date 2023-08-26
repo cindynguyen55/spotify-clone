@@ -82,7 +82,7 @@ const Sidebar = ({ view, setView, setGlobalPlaylistId }) => {
                                 setGlobalPlaylistId(playlist.id)
                                 setView('playlist')
                             }}
-                            className='cursor-pointer hover:text-white w-52 truncate py-10' //Padiing tam
+                            className='cursor-pointer hover:text-white w-52 truncate py-4'
                         >
                             {playlist.name}
                         </div>
